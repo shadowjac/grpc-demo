@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "gRpcDemo.Client";
+
+package driver;
+
+service DriverService {
+    rpc GetDrivers(google.protobuf.Empty) returns (MultiDriverResponse);
+    rpc GetDriversStream(Query) returns (stream DriverResponse);
+    rpc RegisterLapStream(stream TimePerLapRequest) returns (MultiDriverResponse);
+    rpc RegisterLapNoResponseStream(stream TimePerLapRequest) returns (google.protobuf.Empty);
+}
+
+ enum Experience {
+     Rookie = 0;
+     Veteran = 1;
+ }
+
+message Query {
+    int32 carNumber = 1;
+}
+
+message TimePerLapRequest {
+    int32 driver = 1;
+    google.protobuf.Timestamp lapTime = 2;
+}
+
+message DriverResponse {
+    string name = 1;
+    int32 carNumber = 2;
+    string team = 3;
+    google.protobuf.Timestamp birthDate = 4;
+    Experience experience = 5;
+    google.protobuf.Timestamp timestamp = 6;
+    google.protobuf.Timestamp lastLapTime = 7;
+}
+
+message MultiDriverResponse {
+    repeated DriverResponse drivers = 1;
+}
